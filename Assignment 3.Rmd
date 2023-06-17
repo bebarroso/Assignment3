@@ -1,0 +1,70 @@
+---
+title: "Assignment 3 World Cup"
+author: "Bernardo Barroso"
+date: "2023-06-17"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+print("This data is the results from every world cup match in the 2022 edition. Each team has an SPI, every team has an offensive rating that represents the number of goals that it would be expected to score against an average team on a neutral field and a defensive rating that represents the number of goals that it would be expected to concede. These ratings, in turn, produce an overall SPI rating, which represents the percentage of points — a win is worth 3 points, a tie worth 1 point, and a loss worth 0 points — the team would be expected to take if that match were played over and over again.")
+```
+
+
+```{r import data, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+wcdata <- read.csv("https://projects.fivethirtyeight.com/soccer-api/international/2022/wc_matches.csv")
+
+#the data is available on a CSV file in github so this formula just creates a db as it reads the csv.
+#there are no missing lines or values so its a very straight forward import.
+
+
+
+```
+
+```{r filter, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(bslib)
+
+filtered <- wcdata %>%
+  select(-league_id, -league, -xg1, -xg2, -nsxg1, -nsxg2, -adj_score1, -adj_score2)
+  
+
+#This just cleans up the rows we will use soon and drops the other ones
+
+```
+
+The data has `r nrow(wcdata)` rows and `r ncol(wcdata)` columns. Only `r ncol(filtered)` columns will be used in the analysis, with all rows. 
+
+```{r table description, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+Variables = list(colnames(filtered))
+Descriptions = c("Match Date", "Name of Team 1", "Name of Team 2", "SPI Rating Team 1", "SPI Rating Team 2", "Probability of Team 1 Victory", "Probability of Team 2 Victory", "Probability of a Tie", "Projected Score for Team 1", "Projected Score for Team 2", "Actual Score for Team 1", "Actual Score for Team 2")
+variable_descriptions = data.frame(Variables, Descriptions)
+names(variable_descriptions)[1] <- "Variables"
+
+print(variable_descriptions)
+
+
+```
+
+```{r summary, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+summary_filtered <- filtered %>%
+  select("prob1", "prob2", "probtie", "score1", "score2") %>%
+  summary()
+print(summary_filtered)
+print("There are no missing values in the data.")
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
